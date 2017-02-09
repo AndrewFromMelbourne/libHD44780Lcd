@@ -54,7 +54,7 @@ HD44780::LcdColumnGraph::setup()
 {
     for (uint8_t letter = 0 ; letter < 8 ; ++letter)
     {
-        uint8_t pixels[8];
+        std::array<uint8_t, 8> pixels;
 
         for (uint8_t i = 0 ; i < 8 ; ++i)
         {

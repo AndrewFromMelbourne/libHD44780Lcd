@@ -96,7 +96,11 @@ public:
     void backlight() override;
     void noBacklight() override;
 
-    void createChar(uint8_t number, uint8_t* data) const override;
+    void
+    createChar(
+        uint8_t number,
+        const std::array<uint8_t, 8>& data) const override;
+
     void setCursor(uint8_t column, uint8_t row) const override;
 
     using Lcd::write;

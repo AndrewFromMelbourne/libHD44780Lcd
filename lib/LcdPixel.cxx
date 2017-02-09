@@ -38,49 +38,9 @@ HD44780::LcdPixel::LcdPixel(
     _row(row),
     _column(column),
     _changed(255),
-    _setup(false)
+    _setup(false),
+	_pixels{}
 {
-    for (uint8_t i = 0 ; i < 64 ; ++i)
-    {
-        _pixels[i] = 0;
-    }
-}
-
-//-------------------------------------------------------------------------
-
-HD44780::LcdPixel::LcdPixel(
-    const HD44780::LcdPixel& lcdpixels)
-:
-    _lcd(lcdpixels._lcd),
-    _row(lcdpixels._row),
-    _column(lcdpixels._column),
-    _changed(lcdpixels._changed)
-{
-    for (uint8_t i = 0 ; i < 64 ; ++i)
-    {
-        _pixels[i] = lcdpixels._pixels[i];
-    }
-}
-
-//-------------------------------------------------------------------------
-
-HD44780::LcdPixel&
-HD44780::LcdPixel::operator=(
-    const HD44780::LcdPixel& lcdpixels)
-{
-    if (this != &lcdpixels)
-    {
-        _row = lcdpixels._row;
-        _column = lcdpixels._column;
-        _changed = lcdpixels._changed;
-
-        for (uint8_t i = 0 ; i < 64 ; ++i)
-        {
-            _pixels[i] = lcdpixels._pixels[i];
-        }
-    }
-
-    return *this;
 }
 
 //-------------------------------------------------------------------------
@@ -88,15 +48,14 @@ HD44780::LcdPixel::operator=(
 void
 HD44780::LcdPixel::clear()
 {
-    for (uint8_t j = 0 ;  j < 8 ; ++j)
+    for (uint8_t ch = 0 ;  ch < 8 ; ++ch)
     {
-        for (uint8_t i = 0 ; i < 8 ; ++i)
+        for (auto& row : _pixels[ch])
         {
-            if (_pixels[(j * 8) + i] != 0)
+            if (row != 0)
             {
-                _pixels[(j * 8) + i] = 0;
-
-                _changed |= (1 << j);
+                row = 0;
+                _changed |= (1 << ch);
             }
         }
     }
@@ -116,7 +75,7 @@ HD44780::LcdPixel::getPixel(
     uint8_t row = y % 8;
     uint8_t bit = 4 - (x % 5);
 
-    if (_pixels[(ch * 8) + row] & (1 << bit))
+    if (_pixels[ch][row] & (1 << bit))
     {
         return 1;
     }
@@ -140,9 +99,9 @@ HD44780::LcdPixel::setPixel(
     uint8_t row = y % 8;
     uint8_t bit = 4 - (x % 5);
 
-    if ((_pixels[(ch * 8) + row] & (1 << bit)) == 0)
+    if ((_pixels[ch][row] & (1 << bit)) == 0)
     {
-        _pixels[(ch * 8) + row] |= (1 << bit);
+        _pixels[ch][row] |= (1 << bit);
         _changed |= (1 << ch);
     }
 }
@@ -161,9 +120,9 @@ HD44780::LcdPixel::unsetPixel(
     uint8_t row = y % 8;
     uint8_t bit = 4 - (x % 5);
 
-    if ((_pixels[(ch * 8) + row] & (1 << bit)) != 0)
+    if ((_pixels[ch][row] & (1 << bit)) != 0)
     {
-        _pixels[(ch * 8) + row] &= ~(1 << bit);
+        _pixels[ch][row] &= ~(1 << bit);
         _changed |= (1 << ch);
     }
 }
@@ -177,7 +136,7 @@ HD44780::LcdPixel::update()
     {
         if (_changed & (1 << ch))
         {
-            _lcd.createChar(ch, _pixels + (ch * 8));
+            _lcd.createChar(ch, _pixels[ch]);
         }
     }
 

@@ -56,7 +56,17 @@ HD44780::LcdRowSlider::setup()
     for (uint8_t letter = 0 ; letter <= 5 ; ++letter)
     {
         uint8_t pixel = (letter == 5) ? 0 : 1 << (4 - letter);
-        uint8_t pixels[8] = { 0, pixel, pixel, 0x1F, pixel, pixel, 0, 0 };
+        std::array<uint8_t, 8> pixels =
+        {
+            0x00,
+            pixel,
+            pixel,
+            0x1F,
+            pixel,
+            pixel,
+            0x00,
+            0x00
+        };
 
         _lcd.createChar(letter, pixels);
     }

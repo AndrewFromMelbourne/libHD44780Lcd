@@ -347,13 +347,13 @@ HD44780::LcdI2C::noBacklight()
 void
 HD44780::LcdI2C::createChar(
     uint8_t number,
-    uint8_t* data) const
+    const std::array<uint8_t, 8>& data) const
 {
     sendLcdCommand(SET_CGRAM_ADDRESS | (number << 3));
 
-    for (int i = 0 ; i < 8 ; ++i)
+    for (const auto& value : data)
     {
-        sendLcdData(data[i]);
+        sendLcdData(value);
     }
 }
 

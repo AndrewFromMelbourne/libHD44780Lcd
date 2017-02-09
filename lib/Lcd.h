@@ -31,6 +31,7 @@
 //-------------------------------------------------------------------------
 
 #include <algorithm>
+#include <array>
 #include <cstdint>
 #include <cstring>
 #include <string>
@@ -92,7 +93,11 @@ public:
         linger_ = false;
     }
 
-    virtual void createChar(uint8_t number, uint8_t* data) const {};
+    virtual void
+    createChar(
+        uint8_t number,
+        const std::array<uint8_t, 8>& data) const {};
+
     virtual void setCursor(uint8_t column, uint8_t row) const {};
     virtual size_t write(uint8_t value) const = 0;
 

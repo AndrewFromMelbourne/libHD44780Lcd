@@ -50,10 +50,6 @@ public:
         uint8_t column = 0,
         uint8_t row = 0);
 
-    LcdPixel(const LcdPixel& lcdpixel);
-
-    LcdPixel& operator=(const LcdPixel& lcdpixel);
-
     void clear();
     uint8_t getPixel(uint8_t x, uint8_t y) const;
     void setPixel(uint8_t x, uint8_t y);
@@ -74,7 +70,7 @@ private:
     uint8_t _column;
     uint8_t _changed;
     bool _setup;
-    uint8_t _pixels[64];
+    std::array<std::array<uint8_t, 8>, 8> _pixels;
 };
 
 //-------------------------------------------------------------------------

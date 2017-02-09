@@ -62,7 +62,7 @@ HD44780::LcdRowGraph::setup()
             pixelRow |=  1 << (bit-1);
         }
 
-        uint8_t pixels[8];
+        std::array<uint8_t, 8> pixels;
 
         for (uint8_t i = 0 ; i < 8 ; ++i)
         {
