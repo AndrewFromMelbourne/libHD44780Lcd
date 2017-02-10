@@ -37,13 +37,13 @@ HD44780::LcdColumnGraph::LcdColumnGraph(
     uint8_t firstRow,
     uint8_t lastRow)
 :
-    _lcd(lcd),
-    _min(min),
-    _max(max),
-    _column(column),
-    _lastRow(lastRow),
-    _rows(lastRow - firstRow + 1),
-    _setup(false)
+    lcd_(lcd),
+    min_(min),
+    max_(max),
+    column_(column),
+    lastRow_(lastRow),
+    rows_(lastRow - firstRow + 1),
+    setup_(false)
 {
 }
 
@@ -68,10 +68,10 @@ HD44780::LcdColumnGraph::setup()
             }
         }
 
-        _lcd.createChar(letter, pixels);
+        lcd_.createChar(letter, pixels);
     }
 
-    _setup = true;
+    setup_ = true;
 }
 
 //-------------------------------------------------------------------------
@@ -80,7 +80,7 @@ void
 HD44780::LcdColumnGraph::unscaled(
     uint8_t value)
 {
-    if (not _setup)
+    if (not setup_)
     {
         setup();
     }
@@ -92,21 +92,21 @@ HD44780::LcdColumnGraph::unscaled(
 
     for ( ; letter < letters ; ++letter)
     {
-        _lcd.setCursor(_column, _lastRow - letter);
-        _lcd.write((uint8_t)7);
+        lcd_.setCursor(column_, lastRow_ - letter);
+        lcd_.write((uint8_t)7);
     }
 
     if (bar)
     {
-        _lcd.setCursor(_column, _lastRow - letter);
-        _lcd.write(bar-1);
+        lcd_.setCursor(column_, lastRow_ - letter);
+        lcd_.write(bar-1);
         ++letter;
     }
 
-    for ( ; letter < _rows ; ++letter)
+    for ( ; letter < rows_ ; ++letter)
     {
-        _lcd.setCursor(_column, _lastRow - letter);
-        _lcd.write(' ');
+        lcd_.setCursor(column_, lastRow_ - letter);
+        lcd_.write(' ');
     }
 }
 

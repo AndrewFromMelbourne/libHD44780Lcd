@@ -25,8 +25,8 @@
 //
 //-------------------------------------------------------------------------
 
-#ifndef LCD_COLUMN_GRAPH_H
-#define LCD_COLUMN_GRAPH_H
+#ifndef LCDcolumn__GRAPH_H
+#define LCDcolumn__GRAPH_H
 
 //-------------------------------------------------------------------------
 
@@ -54,18 +54,18 @@ public:
 
     void value(int32_t value)
     {
-        unscaled(map(value, _min, _max, 0, _rows * 8));
+        unscaled(map(value, min_, max_, 0, rows_ * 8));
     }
 
     void unscaled(uint8_t value);
 
-    uint8_t getColumn() const { return _column; }
-    void setColumn(uint8_t column) { _column = column; }
+    uint8_t getColumn() const { return column_; }
+    void setColumn(uint8_t column) { column_ = column; }
 
-    int32_t getMin() const { return _min; }
-    int32_t getMax() const { return _max; }
+    int32_t getMin() const { return min_; }
+    int32_t getMax() const { return max_; }
 
-    void setMinMax(int32_t min, int32_t max) { _min = min; _max = max; }
+    void setMinMax(int32_t min, int32_t max) { min_ = min; max_ = max; }
 
 private:
 
@@ -74,13 +74,13 @@ private:
         return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
     }
 
-    Lcd& _lcd;
-    int32_t _min;
-    int32_t _max;
-    uint8_t _column;
-    uint8_t _lastRow;
-    uint8_t _rows;
-    bool _setup;
+    Lcd& lcd_;
+    int32_t min_;
+    int32_t max_;
+    uint8_t column_;
+    uint8_t lastRow_;
+    uint8_t rows_;
+    bool setup_;
 
     void setup();
 };

@@ -34,12 +34,12 @@ HD44780::LcdPixel::LcdPixel(
     uint8_t column,
     uint8_t row)
 :
-    _lcd(lcd),
-    _row(row),
-    _column(column),
-    _changed(255),
-    _setup(false),
-	_pixels{}
+    lcd_(lcd),
+    row_(row),
+    column_(column),
+    changed_(255),
+    setup_(false),
+	pixels_{}
 {
 }
 
@@ -50,12 +50,12 @@ HD44780::LcdPixel::clear()
 {
     for (uint8_t ch = 0 ;  ch < 8 ; ++ch)
     {
-        for (auto& row : _pixels[ch])
+        for (auto& row : pixels_[ch])
         {
             if (row != 0)
             {
                 row = 0;
-                _changed |= (1 << ch);
+                changed_ |= (1 << ch);
             }
         }
     }
@@ -75,7 +75,7 @@ HD44780::LcdPixel::getPixel(
     uint8_t row = y % 8;
     uint8_t bit = 4 - (x % 5);
 
-    if (_pixels[ch][row] & (1 << bit))
+    if (pixels_[ch][row] & (1 << bit))
     {
         return 1;
     }
@@ -99,10 +99,10 @@ HD44780::LcdPixel::setPixel(
     uint8_t row = y % 8;
     uint8_t bit = 4 - (x % 5);
 
-    if ((_pixels[ch][row] & (1 << bit)) == 0)
+    if ((pixels_[ch][row] & (1 << bit)) == 0)
     {
-        _pixels[ch][row] |= (1 << bit);
-        _changed |= (1 << ch);
+        pixels_[ch][row] |= (1 << bit);
+        changed_ |= (1 << ch);
     }
 }
 
@@ -120,10 +120,10 @@ HD44780::LcdPixel::unsetPixel(
     uint8_t row = y % 8;
     uint8_t bit = 4 - (x % 5);
 
-    if ((_pixels[ch][row] & (1 << bit)) != 0)
+    if ((pixels_[ch][row] & (1 << bit)) != 0)
     {
-        _pixels[ch][row] &= ~(1 << bit);
-        _changed |= (1 << ch);
+        pixels_[ch][row] &= ~(1 << bit);
+        changed_ |= (1 << ch);
     }
 }
 
@@ -134,15 +134,15 @@ HD44780::LcdPixel::update()
 {
     for (uint8_t ch = 0 ; ch < 8 ; ++ch)
     {
-        if (_changed & (1 << ch))
+        if (changed_ & (1 << ch))
         {
-            _lcd.createChar(ch, _pixels[ch]);
+            lcd_.createChar(ch, pixels_[ch]);
         }
     }
 
-    _changed = 0;
+    changed_ = 0;
 
-    if (_setup == false)
+    if (setup_ == false)
     {
         setup();
     }
@@ -154,9 +154,9 @@ void
 HD44780::LcdPixel::setColumn(
     uint8_t column)
 {
-    if (column != _column)
+    if (column != column_)
     {
-        _column = column;
+        column_ = column;
         print();
     }
 }
@@ -167,9 +167,9 @@ void
 HD44780::LcdPixel::setRow(
     uint8_t row)
 {
-    if (row != _row)
+    if (row != row_)
     {
-        _row = row;
+        row_ = row;
         print();
     }
 }
@@ -179,7 +179,7 @@ HD44780::LcdPixel::setRow(
 void
 HD44780::LcdPixel::setup()
 {
-    _setup = true;
+    setup_ = true;
     print();
 }
 
@@ -188,16 +188,16 @@ HD44780::LcdPixel::setup()
 void
 HD44780::LcdPixel::print() const
 {
-    _lcd.clear();
+    lcd_.clear();
 
     uint8_t i = 0;
-    for (uint8_t row = _row ; row < _row + 2 ; ++row)
+    for (uint8_t row = row_ ; row < row_ + 2 ; ++row)
     {
-        _lcd.setCursor(_column, row);
+        lcd_.setCursor(column_, row);
 
-        for (uint8_t column = _column ; column < _column + 4 ; ++column)
+        for (uint8_t column = column_ ; column < column_ + 4 ; ++column)
         {
-            _lcd.write(i++);
+            lcd_.write(i++);
         }
     }
 }

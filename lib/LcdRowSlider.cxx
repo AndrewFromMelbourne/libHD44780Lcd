@@ -37,13 +37,13 @@ HD44780::LcdRowSlider::LcdRowSlider(
     uint8_t firstColumn,
     uint8_t lastColumn)
 :
-    _lcd(lcd),
-    _min(min),
-    _max(max),
-    _row(row),
-    _firstColumn(firstColumn),
-    _columns(lastColumn - firstColumn + 1),
-    _setup(false)
+    lcd_(lcd),
+    min_(min),
+    max_(max),
+    row_(row),
+    firstColumn_(firstColumn),
+    columns_(lastColumn - firstColumn + 1),
+    setup_(false)
 {
 }
 
@@ -68,10 +68,10 @@ HD44780::LcdRowSlider::setup()
             0x00
         };
 
-        _lcd.createChar(letter, pixels);
+        lcd_.createChar(letter, pixels);
     }
 
-    _setup = true;
+    setup_ = true;
 }
 
 //-------------------------------------------------------------------------
@@ -80,7 +80,7 @@ void
 HD44780::LcdRowSlider::unscaled(
     uint8_t value)
 {
-    if (not _setup)
+    if (not setup_)
     {
         setup();
     }
@@ -89,19 +89,19 @@ HD44780::LcdRowSlider::unscaled(
     uint8_t bar = value % 5;
     uint8_t letter = 0;
 
-    _lcd.setCursor(letter + _firstColumn, _row);
+    lcd_.setCursor(letter + firstColumn_, row_);
 
     for ( ; letter < letters ; ++letter)
     {
-        _lcd.write((uint8_t)5);
+        lcd_.write((uint8_t)5);
     }
 
     ++letter;
-    _lcd.write(bar);
+    lcd_.write(bar);
 
-    for ( ; letter < _columns ; ++letter)
+    for ( ; letter < columns_ ; ++letter)
     {
-        _lcd.write((uint8_t)5);
+        lcd_.write((uint8_t)5);
     }
 }
 
@@ -112,7 +112,7 @@ HD44780::LcdRowSlider::setColumns(
     uint8_t first,
     uint8_t last)
 {
-    _firstColumn = first;
-    _columns = last - first + 1;
+    firstColumn_ = first;
+    columns_ = last - first + 1;
 }
 

@@ -65,12 +65,12 @@ private:
     void print() const;
     void setup();
 
-    Lcd& _lcd;
-    uint8_t _row;
-    uint8_t _column;
-    uint8_t _changed;
-    bool _setup;
-    std::array<std::array<uint8_t, 8>, 8> _pixels;
+    Lcd& lcd_;
+    uint8_t row_;
+    uint8_t column_;
+    uint8_t changed_;
+    bool setup_;
+    std::array<std::array<uint8_t, 8>, 8> pixels_;
 };
 
 //-------------------------------------------------------------------------
