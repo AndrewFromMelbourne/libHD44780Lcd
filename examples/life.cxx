@@ -170,7 +170,7 @@ main()
 {
     try
     {
-        HD44780::LcdI2C lcd { "/dev/i2c-1", 0x27, 20, 4 };
+        HD44780::LcdI2C lcd {"/dev/i2c-1", 0x27, 20, 4};
 
         HD44780::LcdPixel pixel(lcd, 8, 1);
 

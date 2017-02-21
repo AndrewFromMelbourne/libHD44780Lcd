@@ -117,6 +117,8 @@ private:
     void sendLcdNibble(uint8_t value) const;
     void toggleLcdEnableBit(uint8_t value) const;
 
+    ssize_t send(uint8_t value) const;
+
     FileDescriptor fd_;
     uint8_t backlight_;
     uint8_t displayControl_;

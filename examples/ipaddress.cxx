@@ -42,7 +42,7 @@ main()
 {
     try
     {
-        HD44780::LcdI2C lcd { "/dev/i2c-1", 0x27, 20, 4, true };
+        HD44780::LcdI2C lcd {"/dev/i2c-1", 0x27, 20, 4, true};
 
         lcd.clear();
 

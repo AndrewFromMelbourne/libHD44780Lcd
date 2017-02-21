@@ -118,6 +118,7 @@ namespace
         BACKLIGHT_ON = 0x08
     };
 
+    static const int MaximumWriteRetries{100};
 };
 
 //-------------------------------------------------------------------------
@@ -160,7 +161,7 @@ HD44780::LcdI2C::LcdI2C(
 
     // reset expander and turn off backlight
 
-    if (i2c_smbus_write_byte(fd_.fd(), backlight_) == -1)
+    if (send(backlight_) == -1)
     {
         std::string what( "write " __FILE__ "("
                         + std::to_string(__LINE__)
@@ -418,7 +419,7 @@ void
 HD44780::LcdI2C::sendLcdNibble(
     uint8_t value) const
 {
-    if (i2c_smbus_write_byte(fd_.fd(), value | backlight_) == -1)
+    if (send(value | backlight_) == -1)
     {
         std::string what( "write " __FILE__ "("
                         + std::to_string(__LINE__)
@@ -434,7 +435,7 @@ void
 HD44780::LcdI2C::toggleLcdEnableBit(
     uint8_t value) const
 {
-    if (i2c_smbus_write_byte(fd_.fd(), value | lcdEnableBit) == -1)
+    if (send(value | lcdEnableBit) == -1)
     {
         std::string what( "write " __FILE__ "("
                         + std::to_string(__LINE__)
@@ -442,7 +443,7 @@ HD44780::LcdI2C::toggleLcdEnableBit(
         throw std::system_error(errno, std::system_category(), what);
     }
     usleep(500);
-    if (i2c_smbus_write_byte(fd_.fd(), value & ~lcdEnableBit) == -1)
+    if (send(value & ~lcdEnableBit) == -1)
     {
         std::string what( "write " __FILE__ "("
                         + std::to_string(__LINE__)
@@ -450,5 +451,24 @@ HD44780::LcdI2C::toggleLcdEnableBit(
         throw std::system_error(errno, std::system_category(), what);
     }
     usleep(500);
+}
+
+//-------------------------------------------------------------------------
+
+ssize_t
+HD44780::LcdI2C::send(
+    uint8_t value) const
+{
+    ssize_t result = ::write(fd_.fd(), &value, 1);
+    int count = 1;
+
+    while ((result == -1) && (count < MaximumWriteRetries))
+    {
+        usleep(500);
+        result = ::write(fd_.fd(), &value, 1);
+        ++count;
+    }
+
+    return result;
 }
 

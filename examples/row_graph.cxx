@@ -41,7 +41,7 @@ main()
 {
     try
     {
-        HD44780::LcdI2C lcd { "/dev/i2c-1", 0x27, 20, 4 };
+        HD44780::LcdI2C lcd {"/dev/i2c-1", 0x27, 20, 4};
 
         HD44780::LcdRowGraph lrg(lcd, 0, 100, 1, 0, 19);
 

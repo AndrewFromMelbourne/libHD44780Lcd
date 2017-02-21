@@ -39,7 +39,7 @@ HD44780::LcdPixel::LcdPixel(
     column_(column),
     changed_(255),
     setup_(false),
-	pixels_{}
+    pixels_{}
 {
 }
 
